@@ -26,6 +26,10 @@ idOne := a.Get()
 idTwo := b.Get()
 ```
 
+## Installation
+
+`go get -u github.com/ben-greco/base58id`
+
 ## What base58id is
 
 This package...
