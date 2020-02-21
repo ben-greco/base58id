@@ -21,7 +21,7 @@ fmt.Println(id)
 a, _ := base58id.New(1, 1)
 b, _ := base58id.New(1, 2)
 
-// These two ids never be the same
+// These two ids will never be the same
 idOne := a.Get()
 idTwo := b.Get()
 ```
