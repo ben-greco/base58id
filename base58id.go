@@ -96,10 +96,11 @@ func (s *ShortIDServer) distributor() {
 	}
 }
 
-// New creates a short ID server. Any two ID servers created with without an instance ID WILL generate duplicate IDs in
-// short order. Any two short ID servers with different instance IDs will not create duplicates for hundreds of years.
-// The capacity parameter determines how many IDs are kept in memory at any time. Capacity is always at least 1 no
-// matter what input is given. For applications that could generate
+// New creates a short ID server. Any two short ID servers created without an instance ID or with the same instance ID
+// *WILL* generate duplicate IDs in short order. Any two short ID servers with different instance IDs *WILL NOT* create
+// duplicates IDs. The capacity parameter determines how many IDs are kept in memory at any time. Capacity is always at
+// least 1 no matter what input is given. See parameters section of the README to learn more about tradeoffs related to
+// speed versus in memory storage in your application.
 func New(capacity int, instanceID ...int) (*ShortIDServer, error) {
 
 	if capacity < 1 {

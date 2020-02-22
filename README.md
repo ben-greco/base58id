@@ -74,7 +74,7 @@ instance IDs create shorter base58id IDs and omitting it creates the shortest ID
 A base58id ID is created by combining the following things together in an integer and encoding 
 that integer in base58:
 
-- an "as short we can" integer that is unique in the last second that contains no zeros
+- an "as short as we can" integer that is unique in the last second and contains no zeros
 - a zero, as a separator
 - an instance ID that contains no zeros, but this may be omitted
 - a zero, as a separator, if needed
