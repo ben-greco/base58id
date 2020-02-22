@@ -1,4 +1,4 @@
-# Package base58id
+# base58id
 
 **Fast generation of surprisingly short unique IDs for standalone or distributed systems with low memory use 
 and no disk use**
@@ -21,17 +21,21 @@ fmt.Println(id)
 a, _ := base58id.New(1, 1)
 b, _ := base58id.New(1, 2)
 
-// These two ids never be the same
+// These two ids will never be the same
 idOne := a.Get()
 idTwo := b.Get()
 ```
+
+## Installation
+
+`go get -u github.com/ben-greco/base58id`
 
 ## What base58id is
 
 This package...
 - Makes string IDs that are between 59% and 81% shorter than a type 4 UUID, depending on 
 the number of IDs generated per second and number of concurrent generators.
-- Makes IDs that are guaranteed to be unique for **at least** a millennium when unique IDs for multi-instance are used correctly.
+- Makes IDs that are guaranteed to be unique for **at least** a millennium when instance IDs for multi-instance configurations are used correctly.
 - Generates IDs faster than 180,000 per second per instance.
 - Can pre-generate and store up to `math.MaxInt32` unique IDs in memory to be retrieved during 
 burst usage, depending on configuration. See parameters section. 
