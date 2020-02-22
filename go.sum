@@ -1,4 +1,2 @@
 github.com/akamensky/base58 v0.0.0-20170920141933-92b0f56f531a h1:ndZwlx4H28xTc2WeU9tsGyv+y8xBp2HH31x0xi41c7M=
 github.com/akamensky/base58 v0.0.0-20170920141933-92b0f56f531a/go.mod h1:dl0ldiQPIl8Io2dgdNbAtqeuq0Os0SxIGCn8IVGH3zo=
-github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
-github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=

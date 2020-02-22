@@ -61,7 +61,7 @@ to increase on-demand throughput. See instanceID.
 - instanceID (...int): Must not contain a zero (see How it works). Must either not be submitted, 
 or be a single integer. Use this to make multiple instances of base58id generators and increase 
 output. **NEVER** create a multi-instance system where two instances have the same instance ID 
-(that includes having no instance ID), 
+(that includes having no instance ID, 
 they are guaranteed to make a duplicate ID under any kind of production volume. Overall, shorter 
 instance IDs create shorter base58id IDs and omitting it creates the shortest IDs.
 
@@ -78,7 +78,7 @@ instance IDs create shorter base58id IDs and omitting it creates the shortest ID
 A base58id ID is created by combining the following things together in an integer and encoding 
 that integer in base58:
 
-- an "as short as we can" integer that is unique in the last second and contains no zeros
+- an "as short we can" integer that is unique in the last second that contains no zeros
 - a zero, as a separator
 - an instance ID that contains no zeros, but this may be omitted
 - a zero, as a separator, if needed

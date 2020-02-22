@@ -7,7 +7,7 @@ import (
 )
 
 func TestInvalidInstanceID(t *testing.T) {
-	_, err := New(3, 101)
+	_, err := New(WithCapacity(3), WithInstanceID(101))
 	if err == nil {
 		t.Error("this should have been an error")
 		t.Fail()
@@ -15,33 +15,34 @@ func TestInvalidInstanceID(t *testing.T) {
 	}
 }
 
+// TODO: Streamline test if possible. Took over 10 minutes to run on my laptop
 func TestMachineIDUniqueness(t *testing.T) {
-	var b, c, d, e *ShortIDServer
-	a, err := New(3, 1)
+	var b, c, d, e *Broker
+	a, err := New(WithCapacity(3), WithInstanceID(1))
 	if err != nil {
 		t.Errorf("error creating new server: %v", err)
 		t.Fail()
 		return
 	}
-	b, err = New(3, 2)
+	b, err = New(WithCapacity(3), WithInstanceID(2))
 	if err != nil {
 		t.Errorf("error creating new server: %v", err)
 		t.Fail()
 		return
 	}
-	c, err = New(3, 3)
+	c, err = New(WithCapacity(3), WithInstanceID(3))
 	if err != nil {
 		t.Errorf("error creating new server: %v", err)
 		t.Fail()
 		return
 	}
-	d, err = New(3, 3943)
+	d, err = New(WithCapacity(3), WithInstanceID(3943))
 	if err != nil {
 		t.Errorf("error creating new server: %v", err)
 		t.Fail()
 		return
 	}
-	e, err = New(3, 3944)
+	e, err = New(WithCapacity(3), WithInstanceID(3944))
 	if err != nil {
 		t.Errorf("error creating new server: %v", err)
 		t.Fail()
@@ -49,7 +50,7 @@ func TestMachineIDUniqueness(t *testing.T) {
 	}
 	m := make(map[string]bool)
 	for i := 0; i < 2000000; i++ {
-		id := a.Get()
+		id := a.Next()
 		if m[id] {
 			t.Errorf("this id from a was already found: %v", id)
 			t.Fail()
@@ -57,7 +58,7 @@ func TestMachineIDUniqueness(t *testing.T) {
 		} else {
 			m[id] = true
 		}
-		id = b.Get()
+		id = b.Next()
 		if m[id] {
 			t.Errorf("this id from b was already found: %v", id)
 			t.Fail()
@@ -65,7 +66,7 @@ func TestMachineIDUniqueness(t *testing.T) {
 		} else {
 			m[id] = true
 		}
-		id = c.Get()
+		id = c.Next()
 		if m[id] {
 			t.Errorf("this id from c was already found: %v", id)
 			t.Fail()
@@ -73,7 +74,7 @@ func TestMachineIDUniqueness(t *testing.T) {
 		} else {
 			m[id] = true
 		}
-		id = d.Get()
+		id = d.Next()
 		if m[id] {
 			t.Errorf("this id from d was already found: %v", id)
 			t.Fail()
@@ -81,7 +82,7 @@ func TestMachineIDUniqueness(t *testing.T) {
 		} else {
 			m[id] = true
 		}
-		id = e.Get()
+		id = e.Next()
 		if m[id] {
 			t.Errorf("this id from e was already found: %v", id)
 			t.Fail()
@@ -93,7 +94,7 @@ func TestMachineIDUniqueness(t *testing.T) {
 }
 
 func TestMaxLength(t *testing.T) {
-	s, err := New(1, 9999)
+	s, err := New(WithCapacity(3), WithInstanceID(9999))
 	if err != nil {
 		t.Errorf("error creating new server: %v", err)
 		t.Fail()
@@ -103,7 +104,7 @@ func TestMaxLength(t *testing.T) {
 	maxLength := 0
 	longestID := ""
 	for i := 0; i < 5000000; i++ {
-		id = s.Get()
+		id = s.Next()
 		if len(id) > maxLength {
 			longestID = id
 			maxLength = len(id)
@@ -116,7 +117,7 @@ func TestMaxLength(t *testing.T) {
 }
 
 func TestSpeedAndUniquenessSingle(t *testing.T) {
-	s, err := New(100)
+	s, err := New(WithCapacity(100))
 	if err != nil {
 		t.Errorf("error creating new server: %v", err)
 		t.Fail()
@@ -125,7 +126,7 @@ func TestSpeedAndUniquenessSingle(t *testing.T) {
 	m := make(map[string]bool)
 	start := time.Now()
 	for i := 0; i < 1800000; i++ {
-		id := s.Get()
+		id := s.Next()
 		if m[id] {
 			t.Fail()
 		} else {
