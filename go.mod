@@ -1,4 +1,4 @@
-module gitlab.com/ben-greco/base58id
+module github.com/ben-greco/base58id
 
 go 1.13
 
