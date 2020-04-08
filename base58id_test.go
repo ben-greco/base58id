@@ -19,7 +19,7 @@ func TestInvalidInstanceID(t *testing.T) {
 func TestMachineIDUniqueness(t *testing.T) {
 	m := make(map[string]bool)
 
-	var b, c, d, e *ShortIDServer
+	var b, d, e *ShortIDServer
 
 	a, err := New(3, 1)
 	if err != nil {
@@ -30,14 +30,6 @@ func TestMachineIDUniqueness(t *testing.T) {
 	}
 
 	b, err = New(3, 2)
-	if err != nil {
-		t.Errorf("error creating new server: %v", err)
-		t.Fail()
-
-		return
-	}
-
-	c, err = New(3, 3)
 	if err != nil {
 		t.Errorf("error creating new server: %v", err)
 		t.Fail()
@@ -75,16 +67,6 @@ func TestMachineIDUniqueness(t *testing.T) {
 		id = b.Get()
 		if m[id] {
 			t.Errorf("this id from b was already found: %v", id)
-			t.Fail()
-
-			return
-		}
-
-		m[id] = true
-
-		id = c.Get()
-		if m[id] {
-			t.Errorf("this id from c was already found: %v", id)
 			t.Fail()
 
 			return
