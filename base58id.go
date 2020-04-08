@@ -42,6 +42,7 @@ type ShortIDServer struct {
 func (s *ShortIDServer) Get() string {
 	s.requestChan <- true
 	t := <-s.receiveChan
+
 	return t
 }
 
@@ -51,6 +52,7 @@ func (s *ShortIDServer) GetMany(n int) []string {
 	for i := 0; i < n; i++ {
 		send = append(send, s.Get())
 	}
+
 	return send
 }
 
@@ -58,7 +60,9 @@ func (s *ShortIDServer) initialize() {
 	s.createChan = make(chan string)
 	s.receiveChan = make(chan string)
 	s.requestChan = make(chan bool)
+
 	go s.generator()
+
 	go s.distributor()
 }
 
@@ -70,6 +74,7 @@ func (s *ShortIDServer) generator() {
 
 func (s *ShortIDServer) distributor() {
 	ticker := time.NewTicker(expireDuration)
+
 	for {
 		switch len(s.ids) {
 		case 0:
@@ -77,8 +82,11 @@ func (s *ShortIDServer) distributor() {
 			s.ids = append(s.ids, t)
 		case s.capacity:
 			<-s.requestChan
+
 			var x string
+
 			x, s.ids = s.ids[0], s.ids[1:]
+
 			s.receiveChan <- x
 		default:
 			select {
@@ -90,6 +98,7 @@ func (s *ShortIDServer) distributor() {
 				s.ids = append(s.ids, t)
 			case <-ticker.C:
 				purgeFromUnique()
+
 				idLength = 1
 			}
 		}
@@ -102,7 +111,6 @@ func (s *ShortIDServer) distributor() {
 // least 1 no matter what input is given. See parameters section of the README to learn more about tradeoffs related to
 // speed versus in memory storage in your application.
 func New(capacity int, instanceID ...int) (*ShortIDServer, error) {
-
 	if capacity < 1 {
 		capacity = 1
 	}
@@ -121,6 +129,7 @@ func New(capacity int, instanceID ...int) (*ShortIDServer, error) {
 		if strings.Contains(id, "0") {
 			return nil, errors.New("your instance ID contained a zero which is not allowed")
 		}
+
 		s.instanceID = id
 		s.shortest = false
 	} else {
@@ -134,31 +143,40 @@ func New(capacity int, instanceID ...int) (*ShortIDServer, error) {
 
 func (s *ShortIDServer) getUniqueID() string {
 	t := s.newSingleID(idLength)
+
 	retries := 0
+
 	for !isUnique(t) {
 		retries++
 		if retries > maxRetries {
 			idLength++
+
 			retries = 0
 		}
+
 		t = s.newSingleID(idLength)
 	}
+
 	addUnique(t)
+
 	return t
 }
 
 func addUnique(s string) {
 	mapLock.Lock()
 	defer mapLock.Unlock()
+
 	uniqueMap[s] = &candidate{ID: s, expiration: time.Now().Add(expireDuration)}
 }
 
 func purgeFromUnique() {
 	mapLock.Lock()
 	defer mapLock.Unlock()
+
 	if len(uniqueMap) == 0 {
 		return
 	}
+
 	for k, v := range uniqueMap {
 		if !v.expiration.After(time.Now()) {
 			delete(uniqueMap, k)
@@ -169,31 +187,38 @@ func purgeFromUnique() {
 func isUnique(s string) bool {
 	mapLock.Lock()
 	defer mapLock.Unlock()
+
 	return uniqueMap[s] == nil
 }
 
 func (s *ShortIDServer) newSingleID(length int) string {
-
 	num := getNumericChars(length)
+
 	secondsString := strconv.FormatInt(time.Now().Unix(), 10)
+
 	var uniqString string
 	if s.shortest {
 		uniqString = num + "0" + secondsString
 	} else {
 		uniqString = num + "0" + s.instanceID + "0" + secondsString
 	}
+
 	my128 := big.NewInt(0)
+
 	myInt, ok := my128.SetString(uniqString, 10)
 	if !ok {
 		log.Println("base58id: problem in set string!")
 	}
+
 	return base58.Encode(myInt.Bytes())
 }
 
 func getNumericChars(num int) string {
 	var b bytes.Buffer
+
 	for i := 0; i < num; i++ {
 		b.WriteString(numericChars[rand.Intn(len(numericChars))])
 	}
+
 	return b.String()
 }
