@@ -1,7 +1,7 @@
 package base58id
 
 import (
-	"fmt"
+	"bytes"
 	"math/rand"
 	"sync"
 	"time"
@@ -13,9 +13,10 @@ const maxNumChar = 0
 
 // TODO: Find some way of making these non-global. It will 'contaminate' tests. (Potentially make the fields on the broker)
 var (
-	idLength  = 1
-	uniqueMap = make(map[string]*candidate)
-	mapLock   sync.Mutex
+	idLength     = 1
+	uniqueMap    = make(map[string]*candidate)
+	mapLock      sync.Mutex
+	numericChars = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}
 )
 
 type candidate struct {
@@ -49,9 +50,12 @@ func isUnique(s string) bool {
 }
 
 func getNumericChars(num int) string {
-	var s = ""
+	//var s = ""
+	var b bytes.Buffer
 	for i := 0; i < num; i++ {
-		s += fmt.Sprint(rand.Intn(maxNumChar + 1))
+		//s += fmt.Sprint(rand.Intn(maxNumChar + 1))
+		b.WriteString(numericChars[rand.Intn(len(numericChars))])
 	}
-	return s
+	//return s
+	return b.String()
 }
