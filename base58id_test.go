@@ -6,6 +6,17 @@ import (
 	"time"
 )
 
+func TestFastSingle(t *testing.T) {
+	s, err := New(1)
+	if err != nil {
+		t.Fail()
+	}
+	for i := 0; i < 400; i++ {
+		time.Sleep(300 * time.Millisecond)
+		fmt.Println(s.Get())
+	}
+}
+
 func TestInvalidInstanceID(t *testing.T) {
 	_, err := New(3, 101)
 	if err == nil {
@@ -136,7 +147,7 @@ func TestSpeedAndUniquenessSingle(t *testing.T) {
 	m := make(map[string]bool)
 	start := time.Now()
 
-	for i := 0; i < 1800000; i++ {
+	for i := 0; i < 2200000; i++ {
 		id := s.Get()
 		if m[id] {
 			t.Fail()
@@ -146,7 +157,7 @@ func TestSpeedAndUniquenessSingle(t *testing.T) {
 	}
 
 	if time.Since(start) > 10*time.Second {
-		t.Log("Did not average 180k per second or more!")
+		t.Log("Did not average 220k per second or more!")
 		t.Fail()
 
 		return

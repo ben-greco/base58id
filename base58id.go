@@ -21,6 +21,7 @@ var (
 	maxRetries     = 3
 	expireDuration = 1050 * time.Millisecond
 	mapLock        sync.Mutex
+	baseConst      int64 = 1400000000
 )
 
 type candidate struct {
@@ -194,13 +195,13 @@ func isUnique(s string) bool {
 func (s *ShortIDServer) newSingleID(length int) string {
 	num := getNumericChars(length)
 
-	secondsString := strconv.FormatInt(time.Now().Unix(), 10)
+	timeString := strconv.FormatInt(time.Now().Unix()-baseConst, 10)
 
 	var uniqString string
 	if s.shortest {
-		uniqString = num + "0" + secondsString
+		uniqString = timeString + "0" + num
 	} else {
-		uniqString = num + "0" + s.instanceID + "0" + secondsString
+		uniqString = timeString + "0" + s.instanceID + "0" + num
 	}
 
 	my128 := big.NewInt(0)
