@@ -1,6 +1,6 @@
 # base58id
 
-**Fast generation of surprisingly short unique IDs for standalone or distributed systems with low memory use 
+**Fast generation of surprisingly short unique IDs distributed systems with low memory use 
 and no disk use**
 
 ## Quick Start (Single instance only)
@@ -39,8 +39,8 @@ the number of IDs generated per second and number of concurrent generators.
 - Generates IDs faster than 180,000 per second per instance.
 - Can pre-generate and store up to `math.MaxInt32` unique IDs in memory to be retrieved during 
 burst usage, depending on configuration. See parameters section. 
-- Never uses disk storage for unique ID generation.
-- Uses a small amount of memory for unique ID generation per instance.
+- Never uses disk storage.
+- Uses a small amount of memory per instance.
 
 ## What base58id is NOT
 
